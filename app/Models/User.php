@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+// use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -26,6 +27,20 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'role',
     ];
+
+    // public function hasRole($role)
+    // {
+    //     return $this->role === $role;
+    // }
+
+    // public function hasRole($roles)
+    // {
+    //     if (is_string($roles)) {
+    //         $roles = explode(',', $roles);
+    //     }
+
+    //     return in_array($this->role, $roles);
+    // }
 
     public function getJWTIdentifier()
     {
@@ -58,5 +73,10 @@ class User extends Authenticatable implements JWTSubject
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Teacher
+    public function Courses() {
+        return $this->hasMany(Course::class);
     }
 }
