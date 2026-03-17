@@ -27,7 +27,7 @@ class RegisterRequest extends FormRequest
             'prenom' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:etudiant,enseignant',
+            'role' => 'required|string|in:student,teacher',
         ];
     }
 }

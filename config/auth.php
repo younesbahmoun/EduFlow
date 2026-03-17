@@ -45,10 +45,10 @@ return [
             'provider' => 'users',
         ],
 
-        // 'api' => [                   // ← this block MUST exist
-        //     'driver'   => 'jwt',
-        //     'provider' => 'users',
-        // ],
+        'api' => [                   // ← this block MUST exist
+            'driver'   => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     /*

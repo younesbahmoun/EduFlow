@@ -62,6 +62,25 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out.']);
     }
 
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string|min:8',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 422);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Password updated successfully']);
+    }
+
     public function refresh(): JsonResponse
     {
         return $this->respondWithToken(auth()->refresh());
