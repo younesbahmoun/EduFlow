@@ -8,27 +8,28 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CourseResource;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
+use App\Services\CourseService;
 
 class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(CourseService $courseService)
     {
-        $courses = Course::all();
+        $courses = $courseService->index();
         return response()->json([
-            'courses' => CourseResource::collection($courses->load('teacher')),
+            'courses' => CourseResource::collection($courses),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCourseRequest $request)
+    public function store(StoreCourseRequest $request, CourseService $courseService)
     {
         $data = $request->validated();
-        $course = Course::create($data);
+        $course = $courseService->store($data);
         return response()->json([
             'message' => 'Course created successfully.',
             'course' => new CourseResource($course),
@@ -38,8 +39,9 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Course $course)
+    public function show(Course $course, CourseService $courseService)
     {
+        $course = $courseService->show($course);
         return response()->json([
             'course' => new CourseResource($course),
         ]);
@@ -48,10 +50,10 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCourseRequest $request, Course $course)
+    public function update(UpdateCourseRequest $request, Course $course, CourseService $courseService)
     {
         $data = $request->validated();
-        $course->update($data);
+        $course = $courseService->update($course, $data);
         return response()->json([
             'message' => 'Course updated successfully.',
             'course' => new CourseResource($course),
@@ -61,9 +63,9 @@ class CourseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Course $course)
+    public function destroy(Course $course, CourseService $courseService)
     {
-        $course->delete();
+        $course = $courseService->delete($course);
         return response()->json([
             'message' => 'Course deleted successfully.',
         ]);

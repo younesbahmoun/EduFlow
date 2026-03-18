@@ -18,7 +18,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware(RoleMiddleware::class.':teacher')->group(function () {
             Route::apiResource('courses', V1CourseController::class)->only(['store', 'update', 'destroy']);
         });
-        Route::middleware(RoleMiddleware::class.':teacher, student')->group(function () {
+        Route::middleware(RoleMiddleware::class.':teacher,student')->group(function () {
             Route::apiResource('courses', V1CourseController::class)->only(['index', 'show']);
         });
         Route::get ('me',      [V1AuthController::class, 'me']);

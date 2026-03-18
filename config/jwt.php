@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60), // token expires after 60 minutes
+    'ttl' => env('JWT_TTL', 60 * 12), //token expires after 12 hours
 
     /*
     |--------------------------------------------------------------------------
