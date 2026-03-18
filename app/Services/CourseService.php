@@ -3,34 +3,42 @@
 namespace App\Services;
 
 use App\Models\Course;
+use App\Interfaces\CourseRepositoryInterface;
 
-class CourseService
-{
-    public function index()
+class CourseService {
+
+    protected $courseRepository;
+
+    public function __construct(CourseRepositoryInterface $courseRepository)
     {
-        return Course::with('teacher')->get();
+        $this->courseRepository = $courseRepository;
     }
 
-    public function store(array $data)
+    public function getAll()
+    {
+        return $this->courseRepository->getAll();
+    }
+
+    public function create(array $data)
     {
         $data['teacher_id'] = auth()->id();
 
-        return Course::create($data);
+        return $this->courseRepository->create($data);
     }
 
-    public function show(Course $course)
+    public function find(Course $course)
     {
-        return $course->load('teacher');
+        return $this->courseRepository->find($course);
     }
 
     public function update(Course $course, array $data)
     {
-        $course->update($data);
+        $this->courseRepository->update($course, $data);
         return $course;
     }
 
     public function delete(Course $course)
     {
-        return $course->delete();
+        return $this->courseRepository->delete();
     }
 }
