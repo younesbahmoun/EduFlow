@@ -42,8 +42,13 @@ class CourseService {
 
     public function update(Course $course, array $data)
     {
-        $this->courseRepository->update($course, $data);
-        return $course;
+        return DB::transaction(function () use ($course, $data) {
+            $course = $this->courseRepository->update($course, $data);
+            if(!empty($data['interest_ids'])) {
+                $course->interests()->sync($data['interest_ids']);
+            }
+            return $course;
+        });
     }
 
     public function delete(Course $course)

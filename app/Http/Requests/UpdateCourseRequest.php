@@ -26,6 +26,8 @@ class UpdateCourseRequest extends FormRequest
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'prix' => 'nullable|numeric',
+            'interest_ids' => 'nullable|array',
+            'interest_ids.*' => 'exists:interests,id',
         ];
     }
 }
