@@ -31,8 +31,8 @@ class Course extends Model
         return $this->hasMany(Wishlist::class);
     }
 
-    public function Interest() {
-        return $this->hasMany(Interest::class);
+    public function interests() {
+        return $this->belongsToMany(Interest::class, 'course_interests', 'course_id', 'interest_id');
     }
 
 }

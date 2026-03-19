@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Interfaces\CourseRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 
 class CourseService {
 
@@ -21,9 +22,17 @@ class CourseService {
 
     public function create(array $data)
     {
-        $data['teacher_id'] = auth()->id();
+        return DB::transaction(function () use ($data) {
+            $data['teacher_id'] = auth()->id();
 
-        return $this->courseRepository->create($data);
+            $course = $this->courseRepository->create($data);
+
+            if (!empty($data['interest_ids'])) {    
+                $course->interests()->attach($data['interest_ids']);
+            }
+
+            return $course;
+        });
     }
 
     public function find(Course $course)
@@ -39,6 +48,6 @@ class CourseService {
 
     public function delete(Course $course)
     {
-        return $this->courseRepository->delete();
+        return $this->courseRepository->delete($course);
     }
 }

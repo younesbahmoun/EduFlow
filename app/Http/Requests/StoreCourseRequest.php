@@ -27,6 +27,8 @@ class StoreCourseRequest extends FormRequest
             'description' => 'nullable|string',
             'prix' => 'required|numeric',
             'teacher_id' => 'required|exists:users,id',
+            'interest_ids' => 'nullable|array',
+            'interest_ids.*' => 'exists:interests,id',
         ];
     }
 }
