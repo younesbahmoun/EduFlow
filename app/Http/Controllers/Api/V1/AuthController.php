@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -21,17 +22,22 @@ class AuthController extends Controller
         //     return response()->json(['errors' => $validated->errors()], 422);
         // }
 
-        $validated['password'] = Hash::make($validated['password']);
-        $user  = User::create($validated);
+        return DB::transaction(function () use ($validated) {
+            $validated['password'] = Hash::make($validated['password']);
+            $user = User::create($validated);
+            if($validated['role'] == 'student') {
+                $user->interests()->attach($validated['interest_ids']);
+            }
+            $token = JWTAuth::fromUser($user);
+            
+            return response()->json([
+                'message' => 'User registered successfully.',
+                'user'    => new UserResource($user),
+                'expires_in'   => auth()->factory()->getTTL() * 60,
+                'token'   => $token,
+            ], 201);
+        });
 
-        $token = JWTAuth::fromUser($user);
-
-        return response()->json([
-            'message' => 'User registered successfully.',
-            'user'    => new UserResource($user),
-            'expires_in'   => auth()->factory()->getTTL() * 60,
-            'token'   => $token,
-        ], 201);
     }
 
     public function login(Request $request): JsonResponse

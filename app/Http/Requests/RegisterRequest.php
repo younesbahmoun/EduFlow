@@ -28,6 +28,18 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|in:student,teacher',
+            // 'interest_ids' => 'required_if:role,student|array',
+            'interest_ids' => 'nullable|array',
+            'interest_ids.*' => 'exists:interests,id',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            // 'interest_ids.required_if' => 'The interests field is required when role is student.',
+            'interest_ids.array' => 'The selected interests is invalid.',
+            'interest_ids.*.exists' => 'The selected interests is invalid.',
         ];
     }
 }

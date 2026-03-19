@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\Mime\Message;
 
 class StoreCourseRequest extends FormRequest
 {
@@ -28,6 +29,14 @@ class StoreCourseRequest extends FormRequest
             'prix' => 'required|numeric',
             'interest_ids' => 'nullable|array',
             'interest_ids.*' => 'exists:interests,id',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'interest_ids.array' => 'The selected interest is invalid.',
+            'interest_ids.*.exists' => 'The selected interest is invalid.',
         ];
     }
 }
