@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\CourseRepositoryInterface;
 use App\Repositories\CourseRepository;
+use App\Interfaces\WishlistRepositoryInterface;
+use App\Repositories\WishlistRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
+        $this->app->bind(WishlistRepositoryInterface::class, WishlistRepository::class);
     }
 
     /**

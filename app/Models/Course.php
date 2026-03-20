@@ -27,12 +27,13 @@ class Course extends Model
         return $this->hasMany(Group::class);
     }
 
-    public function Wishlist() {
-        return $this->hasMany(Wishlist::class);
-    }
-
     public function interests() {
         return $this->belongsToMany(Interest::class, 'course_interests', 'course_id', 'interest_id');
+    }
+
+    public function wishedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
     }
 
 }
