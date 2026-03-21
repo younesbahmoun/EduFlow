@@ -36,4 +36,8 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
     }
 
+    public function enrolledStudents() {
+        return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'student_id');
+    }
+
 }

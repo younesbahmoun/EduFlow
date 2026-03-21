@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class WishlistController extends Controller
 {
-    use AuthorizesRequests;
+    // use AuthorizesRequests;
     protected $wishlistService;
 
     public function __construct(WishlistService $wishlistService) {
