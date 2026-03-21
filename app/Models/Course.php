@@ -40,4 +40,8 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'student_id');
     }
 
+    public function groups() {
+        return $this->hasMany(Group::class, 'course_id', 'id');
+    }
+
 }
