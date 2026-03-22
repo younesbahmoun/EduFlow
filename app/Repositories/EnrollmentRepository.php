@@ -6,14 +6,14 @@ use App\Interfaces\EnrollmentRepositoryInterface;
 use App\Models\Enrollment;
 
 class EnrollmentRepository implements EnrollmentRepositoryInterface {
-    public function createEnrollment($student, $course_id)
+    public function createEnrollment($student, $course)
     {
-        return $student->enrollments()->syncWithoutDetaching($course_id, ['payment_status' => 'pending']);
+        return $student->enrollments()->syncWithoutDetaching($course->id, ['payment_status' => 'pending']);
     }
 
-    public function deleteEnrollment($student, $course_id)
+    public function deleteEnrollment($student, $course)
     {
-        return $student->enrollments()->detach($course_id);
+        return $student->enrollments()->detach($course->id);
     }
 
     public function getEnrollments($student)

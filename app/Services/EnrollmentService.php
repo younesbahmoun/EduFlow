@@ -11,14 +11,14 @@ class EnrollmentService {
         $this->enrollmentRepository = $enrollmentRepository;
     }
 
-    public function createEnrollment($student, $course_id)
+    public function createEnrollment($student, $course)
     {
-        return $this->enrollmentRepository->createEnrollment($student, $course_id);
+        return $this->enrollmentRepository->createEnrollment($student, $course);
     }
 
-    public function deleteEnrollment($student, $course_id)
+    public function deleteEnrollment($student, $course)
     {
-        $enrollment = $this->enrollmentRepository->deleteEnrollment($student, $course_id);
+        $enrollment = $this->enrollmentRepository->deleteEnrollment($student, $course);
         return $enrollment;
     }
 

@@ -20,7 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->group(function () {
         // teacher routes
         Route::middleware(RoleMiddleware::class.':teacher')->group(function () {
-            Route::apiResource('courses', V1CourseController::class)->only(['store', 'update', 'destroy']);
+        Route::apiResource('courses', V1CourseController::class)->only(['store', 'update', 'destroy']);
         });
 
         // teacher and student routes
@@ -39,11 +39,11 @@ Route::prefix('v1')->group(function () {
                 Route::put('{course_id}/toggle', [V1WishlistController::class, 'toggle']); // for favorite icon
             });
 
-            // enrollment routes
-            Route::prefix('enrollments')->group(function () {
-                Route::get('', [V1EnrollmentController::class, 'index']);
-                Route::post('{course_id}', [V1EnrollmentController::class, 'store']);
-                Route::delete('{course_id}', [V1EnrollmentController::class, 'destroy']);
+            // enrollment
+            Route::name('courses')->group(function () {
+                Route::get('my-courses', [V1EnrollmentController::class, 'index'])->name('my');
+                Route::post('courses/{course}/enroll', [V1EnrollmentController::class, 'store'])->name('enroll');
+                Route::delete('courses/{course}/unenroll', [V1EnrollmentController::class, 'destroy'])->name('unenroll');
             });
         });
 

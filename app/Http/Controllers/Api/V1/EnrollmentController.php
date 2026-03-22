@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Enrollment;
 use App\Services\EnrollmentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -30,10 +31,10 @@ class EnrollmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store($course_id)
+    public function store(Course $course)
     {
         $this->authorize('enroll', Enrollment::class);
-        $enrollment = $this->enrollmentService->createEnrollment(auth()->user(), $course_id);
+        $enrollment = $this->enrollmentService->createEnrollment(auth()->user(), $course);
         if($enrollment['attached']) {
             return response()->json([
                 'message' => 'Course added to your enrollments successfully',
@@ -48,10 +49,10 @@ class EnrollmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($course_id)
+    public function destroy(Course $course)
     {
         $this->authorize('enroll', Enrollment::class);
-        $enrollment = $this->enrollmentService->deleteEnrollment(auth()->user(), $course_id);
+        $enrollment = $this->enrollmentService->deleteEnrollment(auth()->user(), $course);
         if($enrollment) {
             return response()->json([
                 'message' => 'Course removed from your enrollments successfully',
