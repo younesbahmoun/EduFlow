@@ -7,14 +7,17 @@ use Illuminate\Http\Request;
 use App\Services\EnrollmentService;
 use App\Repositories\PaymentRepository;
 use Stripe\Webhook;
+use App\Services\GroupService;
 
 class StripeWebhookController extends Controller
 {
     protected $enrollmentService;
+    protected $groupService;
 
-    public function __construct(EnrollmentService $enrollmentService)
+    public function __construct(EnrollmentService $enrollmentService, GroupService $groupService)
     {
         $this->enrollmentService = $enrollmentService;
+        $this->groupService = $groupService;
     }
 
     public function handle(Request $request)
@@ -30,6 +33,8 @@ class StripeWebhookController extends Controller
 
             // update status → paid
             $this->enrollmentService->markAsPaid($studentId, $courseId);
+            // add student to group
+            $this->groupService->addStudentToGroup($studentId, $courseId);
         }
 
         // $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
