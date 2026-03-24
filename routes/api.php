@@ -7,29 +7,36 @@ use App\Http\Controllers\Api\V1\CourseController as V1CourseController;
 use App\Http\Controllers\Api\V1\WishlistController as V1WishlistController;
 use App\Http\Controllers\Api\V1\EnrollmentController as V1EnrollmentController;
 use App\Http\Controllers\Api\V1\GroupController as V1GroupController;
+use App\Http\Controllers\Api\V1\StripeWebhookController as V1StripeWebhookController;
 use App\Http\Middleware\RoleMiddleware;
 
 
 Route::prefix('v1')->group(function () {
     // Public routes
+
+    // auth
     Route::post('register', [V1AuthController::class, 'register']);
     Route::post('login',    [V1AuthController::class, 'login']);
+    // paiment
+    Route::post('stripe/webhook', [V1StripeWebhookController::class, 'handle']);
+    Route::get('payment/success', [V1EnrollmentController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('payment/cancel', [V1EnrollmentController::class, 'paymentCancel'])->name('payment.cancel');
 
     // Protected routes
     
     Route::middleware('auth:api')->group(function () {
         // teacher routes
         Route::middleware(RoleMiddleware::class.':teacher')->group(function () {
-        Route::apiResource('courses', V1CourseController::class)->only(['store', 'update', 'destroy']);
+            Route::apiResource('courses', V1CourseController::class);
         });
 
         // teacher and student routes
-        Route::middleware(RoleMiddleware::class.':teacher,student')->group(function () {
-            Route::apiResource('courses', V1CourseController::class)->only(['index', 'show']);
-        });
+        // Route::middleware(RoleMiddleware::class.':teacher,student')->group(function () {
+        // });
 
         // student routes
         Route::middleware(RoleMiddleware::class.':student')->group(function () {
+            Route::apiResource('courses', V1CourseController::class)->only(['index', 'show']);
             // wishlist routes
             Route::prefix('wishlists')->group(function () {
                 Route::get('', [V1WishlistController::class, 'index']);
