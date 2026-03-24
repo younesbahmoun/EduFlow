@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Services\EnrollmentService;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Services\StripeService;
+use Illuminate\Http\Request;
 
 class EnrollmentController extends Controller
 {
@@ -31,18 +32,48 @@ class EnrollmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Course $course)
+    // public function store(Course $course)
+    // {
+    //     $this->authorize('enroll', Enrollment::class);
+    //     $enrollment = $this->enrollmentService->createEnrollment(auth()->user(), $course);
+    //     if($enrollment['attached']) {
+    //         return response()->json([
+    //             'message' => 'Course added to your enrollments successfully',
+    //             // 'enrollment' => $enrollment,    // "enrollment": {"attached": [1],"detached": [],"updated": []}
+    //         ]);
+    //     }
+    //     return response()->json([
+    //         'message' => 'Course already added to your enrollments',
+    //     ]);
+    // }
+
+    // EnrollmentController.php
+    public function store(Course $course, StripeService $stripeService) 
     {
         $this->authorize('enroll', Enrollment::class);
-        $enrollment = $this->enrollmentService->createEnrollment(auth()->user(), $course);
-        if($enrollment['attached']) {
-            return response()->json([
-                'message' => 'Course added to your enrollments successfully',
-                // 'enrollment' => $enrollment,    // "enrollment": {"attached": [1],"detached": [],"updated": []}
-            ]);
-        }
+        $student = auth()->user();
+        $this->enrollmentService->createEnrollment($student, $course);
+        $session = $stripeService->createCheckoutSession($student, $course);
         return response()->json([
-            'message' => 'Course already added to your enrollments',
+            'checkout_url' => $session->url
+        ]); 
+    }
+
+    public function paymentSuccess(Request $request) {
+        $sessionId = $request->get('session_id');
+        $courseId = $request->get('course_id');
+        return response()->json([
+            'message' => 'Payment successful and enrolled!', 
+            'session_id' => $sessionId, 
+            'course_id' => $courseId
+        ]);
+    }
+
+    public function paymentCancel(Request $request) {
+        return response()->json([
+            'message' => 'Payment cancelled!',
+            'session_id' => $request->get('session_id'),
+            'course_id' => $request->get('course_id'),
         ]);
     }
 
