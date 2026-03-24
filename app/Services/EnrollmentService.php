@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Interfaces\EnrollmentRepositoryInterface;
+use App\Interfaces\GroupRepositoryInterface;
 
 class EnrollmentService {
     private EnrollmentRepositoryInterface $enrollmentRepository;
-    public function __construct(EnrollmentRepositoryInterface $enrollmentRepository)
+    private GroupRepositoryInterface $groupRepository;
+    public function __construct(EnrollmentRepositoryInterface $enrollmentRepository, GroupRepositoryInterface $groupRepository)
     {
         $this->enrollmentRepository = $enrollmentRepository;
+        $this->groupRepository = $groupRepository;
     }
 
     public function createEnrollment($student, $course)
@@ -26,5 +29,16 @@ class EnrollmentService {
     {
         $enrollment = $this->enrollmentRepository->getEnrollments($student);
         return $enrollment;
+    }
+
+    public function markAsPaid($student_id, $course_id)
+    {
+        return $this->enrollmentRepository->updatePaymentStatus(
+            $student_id,
+            $course_id,
+            'paid'
+        );
+
+        
     }
 }
