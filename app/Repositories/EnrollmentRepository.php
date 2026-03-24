@@ -19,6 +19,13 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface {
     public function getEnrollments($student)
     {
         return $student->enrollments;
+        // return $student->enrollments->load('teacher');
+        // return $student->enrollments()->with('teacher')->get();
+    }
+
+    public function updatePaymentStatus($student_id, $course_id, $status)
+    {
+        return Enrollment::where('student_id', $student_id)->where('course_id', $course_id)->update(['payment_status' => $status]);
     }
 
 }
