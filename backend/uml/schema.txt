@@ -1,0 +1,152 @@
+User
+
+المستخدم يمكن يكون teacher أو student.
+
+Table: users
+field	type
+id	id
+name	string
+email	string
+password	string
+role	enum (teacher, student)
+created_at	timestamp
+Relations
+
+User:
+
+teacher → crée courses
+
+student → fait enrollments
+
+student → a wishlist
+
+student → a interests
+
+2️⃣ Course
+
+الكورس لي كيصايبو الأستاذ.
+
+Table: courses
+field	type
+id	id
+title	string
+description	text
+price	decimal
+teacher_id	foreignId
+created_at	timestamp
+Relations
+
+Course:
+
+belongsTo → User (teacher)
+
+hasMany → Enrollments
+
+hasMany → Groups
+
+hasMany → Wishlist
+
+3️⃣ Enrollment
+
+كيعبر على inscription étudiant dans cours.
+
+Table: enrollments
+field	type
+id	id
+student_id	foreignId
+course_id	foreignId
+group_id	foreignId
+payment_status	string
+created_at	timestamp
+Relations
+
+Enrollment:
+
+belongsTo → User (student)
+
+belongsTo → Course
+
+belongsTo → Group
+
+4️⃣ Group
+
+كل cours فيه groups و كل group فيه max 25 students.
+
+Table: groups
+field	type
+id	id
+course_id	foreignId
+name	string
+created_at	timestamp
+Relations
+
+Group:
+
+belongsTo → Course
+
+hasMany → Enrollments
+
+5️⃣ Interest
+
+الاهتمامات ديال الطالب باش نعطيوه recommendation.
+
+Table: interests
+field	type
+id	id
+name	string
+
+لكن العلاقة many to many بين users و interests.
+
+Pivot table
+
+interest_user
+
+field
+user_id
+interest_id
+6️⃣ Wishlist
+
+courses لي بغا الطالب يحتافظ بهم.
+
+Table: wishlists
+field	type
+id	id
+user_id	foreignId
+course_id	foreignId
+created_at	timestamp
+Relations
+
+Wishlist:
+
+belongsTo → User
+
+belongsTo → Course
+
+🔗 Schema global relations
+User
+ ├── hasMany Courses (teacher)
+ ├── hasMany Enrollments (student)
+ ├── belongsToMany Interests
+ └── hasMany Wishlist
+
+Course
+ ├── belongsTo User (teacher)
+ ├── hasMany Enrollments
+ ├── hasMany Groups
+ └── hasMany Wishlist
+
+Enrollment
+ ├── belongsTo User
+ ├── belongsTo Course
+ └── belongsTo Group
+
+Group
+ ├── belongsTo Course
+ └── hasMany Enrollments
+
+Interest
+ └── belongsToMany Users
+
+Wishlist
+ ├── belongsTo User
+ └── belongsTo Course
