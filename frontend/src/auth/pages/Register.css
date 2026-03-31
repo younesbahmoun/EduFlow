@@ -1,0 +1,80 @@
+:root {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --primary: #6366f1;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --input-bg: #0f172a;
+  --border: #334155;
+}
+
+.register-container {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding: 20px;
+}
+
+.register-card {
+  background-color: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  color: var(--text-main);
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+input {
+  padding: 0.8rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: white;
+}
+
+.role-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.card-box {
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  padding: 1rem;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--text-muted);
+}
+
+.role-card.selected .card-box {
+  border-color: var(--primary);
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
